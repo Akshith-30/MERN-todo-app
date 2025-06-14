@@ -5,6 +5,7 @@ import { useState, useEffect, createContext } from "react"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"
+import Notifications, { NotificationProvider } from "./components/Notifications"
 import "./App.css"
 
 // Create auth context
@@ -51,16 +52,19 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <Router>
-        <Routes>
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
-          <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
-        </Routes>
-      </Router>
-    </AuthContext.Provider>
+    <NotificationProvider>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <Router>
+          <Routes>
+            <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
+            <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
+          </Routes>
+          <Notifications />
+        </Router>
+      </AuthContext.Provider>
+    </NotificationProvider>
   )
 }
 

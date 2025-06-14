@@ -100,7 +100,7 @@ function Dashboard() {
     }
   }
 
-  const updateTodoText = async (id, text) => {
+  const updateTodoText = async (id, text, description) => {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(`http://localhost:5000/api/todos/${id}`, {
@@ -109,7 +109,7 @@ function Dashboard() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, description }),
       })
 
       if (!response.ok) {
@@ -119,7 +119,7 @@ function Dashboard() {
       setTodos(
         todos.map((todo) => {
           if (todo._id === id) {
-            return { ...todo, text }
+            return { ...todo, text, description }
           }
           return todo
         }),
@@ -166,7 +166,14 @@ function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="container header-content">
-          <h1>Todo Dashboard</h1>
+          <div className="header-left">
+            <h1>Todo Dashboard</h1>
+            {user && (
+              <p className="welcome-message">
+                Welcome back, {user.username || user.name || user.email}!
+              </p>
+            )}
+          </div>
           <button onClick={handleLogout} className="logout-button">
             Logout
           </button>

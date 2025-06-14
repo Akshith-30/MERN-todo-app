@@ -1,22 +1,30 @@
 "use client"
 
 import { useState } from "react"
+import { useNotification } from "./Notifications"
 import "./TodoForm.css"
 
 function TodoForm({ onAddTodo }) {
   const [text, setText] = useState("")
   const [description, setDescription] = useState("")
+  const { notifySuccess, notifyError } = useNotification()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (text.trim()) {
-      onAddTodo({
-        text: text.trim(),
-        description: description.trim()
-      })
-      setText("")
-      setDescription("")
+      try {
+        await onAddTodo({
+          text: text.trim(),
+          description: description.trim()
+        })
+        setText("")
+        setDescription("")
+        notifySuccess("Task added successfully!")
+      } catch (error) {
+        console.error("Error adding task:", error)
+        notifyError("Failed to add task. Please try again.")
+      }
     }
   }
 
